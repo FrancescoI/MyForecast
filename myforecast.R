@@ -6,15 +6,18 @@ mycountry$eu <- c("Italy","France","Germany","United Kingdom","Spain","Russia","
 mycountry$apac <- c("Turkey", "Japan","Israel","Taiwan","India","China","Hong Kong","South Korea","United Arab Emirates","Singapore","Lebanon","Indonesia","Kazakhstan","Saudi Arabia","Thailand","Kuwait","Cyprus","Iran","Pakistan","Georgia","Malaysia","Qatar","Philippines","Vietnam","Jordan","Bangladesh","Azerbaijan","Sri Lanka","Iraq","Palestine","Bahrain","Armenia","Oman","Cambodia","Nepal","Mongolia","Uzbekistan","Afghanistan","Maldives","Syria","Macau","Kyrgyzstan","Myanmar (Burma)","Turkmenistan","Brunei","Yemen","Tajikistan","Laos","Bhutan","Timor-Leste")
 mycountry$us <- c("United States", "Canada")
 
+### Creo lista di canali
+mychannel <- list()
+
 ### Creo i vettori per la riclassifica dei canali
-paidsearch <- c("cpc")
-retargeting <- c("retargeting", "shopping")
-display <- c("cpm","display","DISPLAY")
-affiliation <- c("affiliazione", "affiliation")
-email <- c("email")
-direct <- c("(none)")
-organic <- c("organic")
-referral <- c("referral")
+mychannel$paidsearch <- c("cpc")
+mychannel$retargeting <- c("retargeting", "shopping")
+mychannel$display <- c("cpm","display","DISPLAY")
+mychannel$affiliation <- c("affiliazione", "affiliation")
+mychannel$email <- c("email")
+mychannel$direct <- c("(none)")
+mychannel$organic <- c("organic")
+mychannel$referral <- c("referral")
 
 myforecast <- function(file, store) {
   
@@ -47,6 +50,23 @@ myforecast <- function(file, store) {
   csv$year <- year(csv[,1])
   csv$year <- as.character(csv$year)
   
+  ### Riclassifico i canali
+  for(i in 1:length(csv[,3])){
+    for(j in 1:length(mychannel)){
+      if(csv[,3][i] %in% mychannel(j)){
+        csv$medium[i] <- names(mychannel[j])
+      } 
+    }
+  }
   
+  ### Riclassifico i paesi
+  for(i in 1:length(csv[,2])){
+    for(j in 1:length(mycountry)){
+      if(csv[,2][i] %in% mycountry(j)){
+        csv$region[i] <- names(mycountry[j])
+      } 
+    }
+  }
+ 
   
 }
