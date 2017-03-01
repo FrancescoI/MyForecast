@@ -12,11 +12,11 @@ L'esigenza alla base del progetto è duplice:
 - adozione di <strong>metodologie statistiche</strong> atte al forecast di serie storiche di traffico
 - <strong>speed-up del processo di budgeting e forecasting</strong>, eliminando la dipendenza dai tempi di lavorazione dell'analista
 
-L'output previsto per questo progetto è uno script composto da una parte alta di configurazione dell'utility (nome cartella e nome file) e una semplice funzione da richiamare in seguito alla configurazione dello strumento.
+L'output previsto per questo progetto è uno script composto da (1) una parte alta di configurazione dell'utility (nome cartella e nome file) e (2) una funzione preposta al caricamento dei dati, trasformazione degli stessi ed esecuzione delle previsioni numeriche.
 
-Il prodotto finale della funzione prevede due file:
-- un forecast topdown, su 12/18 mesi, del traffico totale - mese su mese.
-- un "db" con i forecast per singola coppia canale+region
+Il prodotto finale prevede la generazione di due file:
+- un forecast topdown, su 12/18 mesi, del traffico totale mese su mese
+- un "db" con i forecast per singola coppia canale+region, anch'essi su 12/18 mesi e mese su mese
 
 I forecast prevedono l'ensembling di tre tecniche distinte:
 - un modello <strong>ARIMA</strong>
