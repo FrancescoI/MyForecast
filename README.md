@@ -1,8 +1,10 @@
 # Bulk Forecasting
 
-Obiettivo la creazione di un'utility in grado di forecastare in automatico, in maniera bulk, 9x4 serie storiche mensili di traffico.
+Obiettivo del progetto, la creazione di un'<strong>utility</strong> in grado di <strong>gestire in automatico la riclassifica di dati</strong> Google Analytics secondo una tassonomia predefinita a monte, <strong>la segmentazione dei dati</strong> su dimensioni primarie e <strong>la previsione a 12/18 mesi</strong> delle singole serie storica.
 
-9 canali:
+La tassonomia predefinita prevede 9 canali per 4 region, secondo il seguente schema:
+
+<strong>9 canali</strong>:
 - Paid Search
 - Retargeting
 - Affiliation
@@ -13,18 +15,10 @@ Obiettivo la creazione di un'utility in grado di forecastare in automatico, in m
 - Referral
 - Others
 
-4 region:
-- US
-- EU
-- APAC
-- Others
+<strong>4 region</strong>: US, EU, APAC, Others
 
-La funzione si occupa di:
-- leggere un csv da cartella specifica per store
-  - il csv dovrà essere uno scarico dati unsampled da GA su specifica predefinita
-- riclassificare "mezzi" e "paesi" secondo la tassonomia predefinita
-- forecastare i dati mensili overall
-- segmentare le serie storiche e forecastare per coppia canale+region
-- scrivere in output due file
-  - forecast aggregato
-  - DB con forecast per singola coppia canale+region
+L'esigenza alla base del progetto è duplice:
+- adozione di <strong>metodologie statistiche</strong> atte al forecast di serie storiche di traffico
+- <strong>speed-up del processo di budgeting e forecasting</strong>, eliminando la dipendenza dai tempi di lavorazione dell'analista
+
+TBC...
