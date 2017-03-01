@@ -25,3 +25,4 @@ I forecast prevedono l'ensembling di tre tecniche distinte:
 
 La scelta degli ordini del modello ARIMA e delle eventuali componenti additive/moltiplicative del modello ETS è automatizzata per mezzo del package <strong>"forecast"</strong> di Rob J Hyndman. Per via della natura delle serie storiche da prevedere, la <strong>componente di trend</strong> (additiva o moltiplicativa) è sempre <strong>smorzata per logiche conservative</strong> nella previsione del traffico.
 
+L'ensembling è, in questa prima fase, una semplice <strong>media aritmetica della stima puntuale<7strong> prodotta dai 3 modelli. Future evoluzioni del progetto potranno prevedere l'adozione di metodologie più <a href=" http://stats.stackexchange.com/questions/47950/ensemble-time-series-model">robuste</a> .
