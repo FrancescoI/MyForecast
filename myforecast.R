@@ -34,11 +34,13 @@ myforecast <- function(file, store) {
   ### Setto l'ambiente di lavoro
   setwd("C:/Users/imbrigliaf/Documents")
   
-  ########################################
-  ### Leggo il csv                       #
-  ### Formato come da seguente schema    #
-  ### |MeseAnno|Paese|Mezzo|Sessioni|    #
-  ########################################
+  ##########################################
+  ### Leggo il csv                       ###
+  ### Formato come da seguente schema    ###
+  ### |MeseAnno|Paese|Mezzo|Sessioni|    ###
+  ### Trasformo le variabili             ###
+  ### Riclassifico canali e paesi        ###
+  ##########################################
   
   csv <- read.csv(paste('FORECAST/',as.character(store),'/',as.character(file),'.csv', sep = ""), 
                   stringsAsFactors = FALSE)
