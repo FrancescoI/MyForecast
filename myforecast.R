@@ -90,5 +90,29 @@ myforecast <- function() {
   csv$region <- region
   
   
-  write.csv(csv, paste("FORECAST/",store,"/output.csv", sep=""), row.names = FALSE)
+  ### Aggrego i dati per mese e salvo in nuova variabile
+  all <- select(csv, Mese.dell.anno, Sessioni) %>% group_by(Mese.dell.anno) %>% summarise(sessioni = sum(Sessioni))
+  all <- rename(all, data = Mese.dell.anno)
+  
+  
+  ### Trovo la data minima ed estraggo anno e mese
+  min_year <- year(min(all$data))
+  min_month <- month(min(all$data))
+  
+  
+  ### Creo l'oggetto all_ts di classe "ts"
+  ### Mese e Anno di partenza v. sopra
+  ### Frequenza 12 mesi
+  all_ts <- ts(all$sessioni, start = c(min_year, min_month), frequency = 12)
+  print(all_ts)
+  
+  ### TODO
+  ### 1. Importare dati con min. 24 mesi e applicare forecast
+  ### 1.1 Salvare output su file ad hoc
+  ### 2. Segmentare dati su base region
+  ### 2.1 Per ogni region, segmentare su base channel
+  ### 2.2 Forecastare ogni "item"
+  ### 2.3 Salvare ogni forecast in formato |Mese|Region|Channel|Sessioni
+  
+  ### write.csv(csv, paste("FORECAST/",store,"/output.csv", sep=""), row.names = FALSE)
 }
