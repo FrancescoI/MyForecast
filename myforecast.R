@@ -55,7 +55,7 @@ myforecast <- function(file, store) {
   ### Riclassifico i canali
   for(i in 1:length(csv[,3])){
     for(j in 1:length(mychannel)){
-      if(csv[,3][i] %in% mychannel(j)){
+      if(csv[,3][i] %in% unlist(mychannel(j))){
         csv$medium[i] <- names(mychannel[j])
       } 
     }
@@ -64,7 +64,7 @@ myforecast <- function(file, store) {
   ### Riclassifico i paesi
   for(i in 1:length(csv[,2])){
     for(j in 1:length(mycountry)){
-      if(csv[,2][i] %in% mycountry(j)){
+      if(csv[,2][i] %in% unlist(mycountry(j))){
         csv$region[i] <- names(mycountry[j])
       } 
     }
