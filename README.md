@@ -4,16 +4,7 @@ Obiettivo del progetto, la creazione di un'<strong>utility</strong> in grado di 
 
 La tassonomia predefinita prevede 9 canali per 4 region, secondo il seguente schema:
 
-<strong>9 canali</strong>:
-- Paid Search
-- Retargeting
-- Affiliation
-- Display
-- Email Marketing
-- Organic
-- Direct
-- Referral
-- Others
+<strong>9 canali</strong>: Paid Search, Retargeting, Affiliation, Display, Email Marketing, Organic, Direct, Referral, Others
 
 <strong>4 region</strong>: US, EU, APAC, Others
 
