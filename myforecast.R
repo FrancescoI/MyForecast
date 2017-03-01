@@ -1,5 +1,9 @@
 ### Pulisco l'ambiente
-rm = list(ls())
+rm(list=ls())
+
+### Faccio setup
+file <- "prova"
+store <- "Valentino"
 
 ### Creo lista di country
 mycountry <- list()
@@ -17,12 +21,12 @@ mychannel$paidsearch <- c("cpc")
 mychannel$retargeting <- c("retargeting", "shopping")
 mychannel$display <- c("cpm","display","DISPLAY")
 mychannel$affiliation <- c("affiliazione", "affiliation")
-mychannel$email <- c("email")
+mychannel$email <- c("email", "newsletter")
 mychannel$direct <- c("(none)")
 mychannel$organic <- c("organic")
 mychannel$referral <- c("referral")
 
-myforecast <- function(file, store) {
+myforecast <- function() {
   
   ### Installo i pacchetti minimi
   library(forecast)
@@ -57,23 +61,34 @@ myforecast <- function(file, store) {
   
   
   ### Riclassifico i canali
-  for(i in 1:length(csv[,3])){
+  medium <- c()
+  for(i in 1:length(csv[,2])){
     for(j in 1:length(mychannel)){
-      if(csv[,3][i] %in% unlist(mychannel(j))){
-        csv$medium[i] <- names(mychannel[j])
+      if(csv[,2][i] %in% unlist(mychannel[j])){
+        medium[i] <- names(mychannel[j])
       } 
     }
+       if(is.na(medium[i])) {
+         medium[i] <- "others"
+       }
   }
+  csv$medium <- medium
   
   
   ### Riclassifico i paesi
-  for(i in 1:length(csv[,2])){
+  region <- c()
+  for(i in 1:length(csv[,3])){
     for(j in 1:length(mycountry)){
-      if(csv[,2][i] %in% unlist(mycountry(j))){
-        csv$region[i] <- names(mycountry[j])
+      if(csv[,3][i] %in% unlist(mycountry[j])){
+        region[i] <- names(mycountry[j])
       } 
     }
+    if(is.na(region[i])) {
+      region[i] <- "others"
+    }
   }
- 
+  csv$region <- region
   
+  
+  write.csv(csv, paste("FORECAST/",store,"/output.csv", sep=""), row.names = FALSE)
 }
