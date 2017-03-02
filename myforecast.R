@@ -141,7 +141,7 @@ myforecast <- function(store, file) {
   
   
   ### Creo il modello ETS
-  ets_all <- ets(all_ts, damped = TRUE, allow.multiplicative.trend = TRUE)
+  ets_all <- ets(all_ts)
   
   
   ### Se non genero errore nella creazione del modello,
