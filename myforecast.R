@@ -30,6 +30,7 @@ myforecast <- function(store, file) {
   library(tidyr)
   library(lubridate)
   library(ggplot2)
+  library(plotly)
   
   
   ### Setto l'ambiente di lavoro
@@ -173,11 +174,26 @@ myforecast <- function(store, file) {
   ### Creo media aritmetica dei 3 modelli
   pred_all_total$combined <- rowMeans(pred_all_total[,-1])
   
-  print(pred_all_total)
+  
+  ### Faccio l'append della serie storica predetta con quella di partenza
+  combined <- data.frame(data =  pred_all_total$data, sessioni = pred_all_total$combined)
+  final_all <- dplyr::union_all(as.data.frame(all), combined)
+  
+  
+  ### Creo l'oggetto da plottare e lo eseguo
+  q <- ggplot(final_all, aes(x=data, y=sessioni)) + geom_point() + geom_line() + theme_bw() + ggtitle("Forecast Overall")
+  qq <- ggplotly(q)
+  print(qq)
+  
+  
+  
+  ### Scrivo il forecast in output
+  write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)
+  
   
   ### TODO
   ### 1. Importare dati con min. 24 mesi e applicare forecast (done!)
-  ### 1.1 Salvare output su file ad hoc
+  ### 1.1 Salvare output su file ad hoc (done!)
   ### 2. Segmentare dati su base region
   ### 2.1 Per ogni region, segmentare su base channel
   ### 2.2 Forecastare ogni "item"
