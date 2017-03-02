@@ -167,7 +167,7 @@ myforecast <- function(store, file) {
   
   
   ### Elimino prima riga
-  pred_all_total[-1,]
+  pred_all_total <- pred_all_total[-1,]
   
   
   ### Creo media aritmetica dei 3 modelli
