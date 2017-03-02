@@ -36,6 +36,8 @@ myforecast <- function(store, file) {
   setwd("C:/Users/imbrigliaf/Documents")
   
   
+  
+  
   ##########################################
   ### Leggo il csv                       ###
   ### Formato come da seguente schema    ###
@@ -49,7 +51,7 @@ myforecast <- function(store, file) {
   
   
   ### Trasformo il mese in data ed estraggo mese e anno in formato stringa
-  csv[,1] <- as.Date(as.character(csv[,1]), format = "%Y%M")
+  csv[,1] <- as.Date(paste(as.character(csv[,1]), '01', sep = ""), format = "%Y%m%d")
   csv$mese <- month(csv[,1])
   csv$mese <- as.character(csv$mese)
   csv$year <- year(csv[,1])
@@ -84,6 +86,18 @@ myforecast <- function(store, file) {
     }
   }
   csv$region <- region
+  
+  
+  
+  
+  ##########################################
+  ### Inizio Forecast di dati mensili,   ###
+  ### aggregati per region e canale.     ###
+  ###                                    ###
+  ### Aggrego i dati riclassificati,     ###
+  ### eseguo i 3 forecast,               ###
+  ### combino e scrivo file in output    ###  
+  ##########################################
   
   
   ### Aggrego i dati per mese e salvo in nuova variabile
