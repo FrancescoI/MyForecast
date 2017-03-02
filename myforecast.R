@@ -185,7 +185,7 @@ myforecast <- function(store, file) {
   qq <- ggplotly(q)
   print(qq)
   
-  
+
   
   ### Scrivo il forecast in output
   write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)
