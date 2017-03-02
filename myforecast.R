@@ -114,10 +114,69 @@ myforecast <- function(store, file) {
   ### Mese e Anno di partenza v. sopra
   ### Frequenza 12 mesi
   all_ts <- ts(all$sessioni, start = c(min_year, min_month), frequency = 12)
-  print(all_ts)
+  
+  
+  
+  
+  ####################################################################################
+  ### Creo i modelli ETS, ARIMA e TBATS.                                             #
+  ### Laddove possibile, applico il parametro damped = TRUE per smorzare la crescita.#
+  ### NB: il dampening abbassa il fitting del modello, ma ci consente di proiettare  #
+  ### i dati nel futuro in maniera più conservativa                                  #
+  ####################################################################################
+  
+  
+  ### Creo dataframe finale con le singole previsioni
+  pred_all_total <- data.frame(data = seq(max(csv$Mese.dell.anno), by = "month", length.out = 25))
+  
+  
+  ### Creo il modello ETS
+  ets_all <- ets(all_ts, damped = TRUE, allow.multiplicative.trend = TRUE)
+  
+  
+  ### Se non genero errore nella creazione del modello,
+  ### Faccio la previsione e salvo su oggetto "_all"
+  if(exists("ets_all")) {
+    pred_all_ets <- forecast(ets_all)
+    pred_all_total$ets <- c(1,as.vector(pred_all_ets$mean))
+  }  
+  
+  
+  ### Creo il modello ARIMA
+  arima_all <- auto.arima(all_ts)
+  
+  
+  ### Se non genero errore nella creazione del modello,
+  ### Faccio la previsione e salvo su oggetto "_all"
+  if(exists("arima_all")) {
+    pred_all_arima <- forecast(arima_all)
+    pred_all_total$arima <- c(1,as.vector(pred_all_arima$mean))
+  }  
+  
+  
+  ### Creo il modello TBATS
+  tbats_all <- tbats(all_ts, use.box.cox = TRUE, use.damped.trend = TRUE)
+  
+  
+  ### Se non genero errore nella creazione del modello,
+  ### Faccio la previsione e salvo su oggetto "_all"
+  if(exists("tbats_all")) {
+    pred_all_tbats <- forecast(tbats_all)
+    pred_all_total$tbats <- c(1,as.vector(pred_all_tbats$mean))
+  }  
+  
+  
+  ### Elimino prima riga
+  pred_all_total[-1,]
+  
+  
+  ### Creo media aritmetica dei 3 modelli
+  pred_all_total$combined <- rowMeans(pred_all_total[,-1])
+  
+  print(pred_all_total)
   
   ### TODO
-  ### 1. Importare dati con min. 24 mesi e applicare forecast
+  ### 1. Importare dati con min. 24 mesi e applicare forecast (done!)
   ### 1.1 Salvare output su file ad hoc
   ### 2. Segmentare dati su base region
   ### 2.1 Per ogni region, segmentare su base channel
