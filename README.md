@@ -20,8 +20,8 @@ Il prodotto finale prevede la generazione di due file:
 
 I forecast prevedono l'ensembling di tre tecniche distinte:
 - un modello <strong>ARIMA</strong>
-- un modello Exponential Smoothing a stati di spazio (<strong>ETS</strong>)
-- un modello Exponential Smoothing a stati di spazio con controllo dell'eteroschedasticità, residui ARMA e componenti di Trend e Stagionalità (<strong>TBATS</strong>)
+- un modello Exponential Smoothing a spazio di stato (<strong>ETS</strong>)
+- un modello Exponential Smoothing a spazio di stato con controllo dell'eteroschedasticità, residui ARMA e componenti di Trend e Stagionalità (<strong>TBATS</strong>)
 
 La scelta degli ordini del modello ARIMA e delle eventuali componenti additive/moltiplicative del modello ETS è automatizzata per mezzo del package <strong>"forecast"</strong> di Rob J Hyndman. Per via della natura delle serie storiche da prevedere, la <strong>componente di trend</strong> (additiva o moltiplicativa) è sempre <strong>smorzata per logiche conservative</strong> nella previsione del traffico.
 
