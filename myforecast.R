@@ -1,10 +1,6 @@
 ### Pulisco l'ambiente
 rm(list=ls())
 
-### Faccio setup
-file <- "prova"
-store <- "Valentino"
-
 ### Creo lista di country
 mycountry <- list()
 
@@ -26,7 +22,7 @@ mychannel$direct <- c("(none)")
 mychannel$organic <- c("organic")
 mychannel$referral <- c("referral")
 
-myforecast <- function() {
+myforecast <- function(store, file) {
   
   ### Installo i pacchetti minimi
   library(forecast)
