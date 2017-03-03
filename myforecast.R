@@ -238,7 +238,11 @@ myforecast <- function(store, file, periods) {
 
   
   ### Scrivo il forecast in output
-  write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)    
+  write.csv(final_all, paste("FORECAST/"
+                             ,store
+                             ,"/"
+                             ,paste(year(Sys.Date()),month(Sys.Date())
+                             , sep = ""),"_forecast_all.csv", sep=""), row.names = FALSE)    
   
   
   ### TODO
