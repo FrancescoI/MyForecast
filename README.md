@@ -25,8 +25,12 @@ I forecast prevedono l'ensembling di tre tecniche distinte:
 
 La scelta degli ordini del modello ARIMA e delle eventuali componenti additive/moltiplicative del modello ETS è automatizzata per mezzo del package <strong>"forecast"</strong> di Rob J Hyndman. 
 
-Il forecast produce due output sulla base di due differenti metodi di ensembling dei modelli:
+L'ensembling risponde invece a due criteri differenti, ognuno generante un output differente:
 - una <strong>media aritmetica</strong> dei forecast ETS, ARIMA e TBATS
 - una <strong>media ponderata sull'errore in-sample</strong> dei 3 modelli (RMSE)
 
 Future evoluzioni della funzione potranno prevedere logiche più sofisticate nel criterio di ensembling (CV ed errori out-of-sample).
+
+In output sono scritti due file:
+- le 5 previsioni (ARIMA, ETS, TBATS, ENSEMBLED1, ENSEMBLED2) sui valori aggregati
+- le 5 previsioni per ogni coppia canale+regione
