@@ -200,18 +200,24 @@ myforecast <- function(store, file) {
   
   
   ### Creo media ponderata su errore in-sample
-  ############ !!!!!!!!!!! FA FIXARE !!!!!!!!!!! ##################
-  a <- data.frame(temp = rep(0, ncol(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')]))) 
-  for(i in length(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')])){
+  a <- data.frame(temp = rep(0, ncol(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')])))
+  b <- data.frame(temp = rep(0, nrow(pred_all_total)))
+  for(i in 1:length(pred_all_total$data)){
     for(j in 1:ncol(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')])){
        a[j,] <- (sum(w_all[[j]] * pred_all_total[i,!names(pred_all_total) %in% c('data', 'combined')][j]))
     }
-      pred_all_total$combinedweightned[i] <- colSums(a)
+      b[i,] <- colSums(a)
   }
+  pred_all_total$combinedweightned <- b$temp
+  names(pred_all_total$combinedweightned) <- 'combinedweightned'
+  
+  
+  ### Approssimo all'unità
+  pred_all_total[,-1] <- apply(pred_all_total[,-1], 2, function(x){round(x,0)})
   
   
   ### Faccio l'append della serie storica predetta con quella di partenza
-  combined <- data.frame(data =  pred_all_total$data, sessioni = pred_all_total$combined)
+  combined <- data.frame(data =  pred_all_total$data, forecastaveraged = pred_all_total$combined, forecastweightned = pred_all_total$combinedweightned)
   final_all <- dplyr::union_all(as.data.frame(all), combined)
   
   
