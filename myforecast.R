@@ -269,5 +269,21 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo funzione che fa forecast per canale
+  x <- function() {
+    
+  }
   
+  ### Creo lista di serie storiche
+  my_series <- vector("list", length(unique(region)) * length(unique(medium)))
+  
+  
+  ### Creo loop per estrarre dati mensili per ogni coppia region-medium
+  i <- 1
+  for(regions in unique(region)){
+    for(mediums in unique(medium)) {
+      my_series[[i]] <- select(csv, Mese.dell.anno, medium, region, Sessioni) %>% group_by(Mese.dell.anno, medium, region) %>% filter(region == regions, medium == mediums) %>% summarise(sessioni = sum(Sessioni))
+      names(my_series)[i] <- paste(regions, "_", mediums, sep="") 
+      i <- i+1
+    }
+  }
 }
