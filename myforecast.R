@@ -269,9 +269,14 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo funzione che fa forecast per canale
-  x <- function() {
+  x <- function(data) {
+    
+    ### Converto il dataframe in formato TS con f=12 e
+    ### Start date uguale alla minima data disponibile per la serie storica
+    data.ts <- ts(data, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
     
   }
+  
   
   ### Creo lista di serie storiche
   my_series <- vector("list", length(unique(region)) * length(unique(medium)))
