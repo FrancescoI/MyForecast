@@ -201,7 +201,11 @@ myforecast <- function(store, file) {
   
   ### Creo media ponderata su errore in-sample
   ### pred_all_total$combinedweightned <- 
-  
+  ###for(i in length(pred_all_total$data)){
+  ###  for(j in 1:ncol(pred_all_total)){
+  ###    cat(sum(w_all[[j]]*pred_all_total[j+1]))
+  ###  }
+  ###}
   
   ### Faccio l'append della serie storica predetta con quella di partenza
   combined <- data.frame(data =  pred_all_total$data, sessioni = pred_all_total$combined)
