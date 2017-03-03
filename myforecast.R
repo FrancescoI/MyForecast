@@ -128,12 +128,11 @@ myforecast <- function(store, file) {
   
   
   
-  ####################################################################################
-  ### Creo i modelli ETS, ARIMA e TBATS.                                             #
-  ### Laddove possibile, applico il parametro damped = TRUE per smorzare la crescita.#
-  ### NB: il dampening abbassa il fitting del modello, ma ci consente di proiettare  #
-  ### i dati nel futuro in maniera più conservativa                                  #
-  ####################################################################################
+  ###################################################################
+  ### Creo i modelli ETS, ARIMA e TBATS.                          ###
+  ### Faccio la previsione e salvo su un data.frame ad hoc.       ###
+  ### Combino i 3 modelli con una semplice media aritmetica       ###
+  ###################################################################
   
   
   ### Creo dataframe finale con le singole previsioni
