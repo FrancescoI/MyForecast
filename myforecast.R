@@ -216,21 +216,26 @@ myforecast <- function(store, file) {
   pred_all_total[,-1] <- apply(pred_all_total[,-1], 2, function(x){round(x,0)})
   
   
-  ################ LAVORARE DA QUI IN POI ###############
+  ### Da wide a long per creare il DB
+  pred_all_total_long <- gather(pred_all_total, type, sessioni, -data)
   
-  ### Faccio l'append della serie storica predetta con quella di partenza
-  combined <- data.frame(data =  pred_all_total$data, forecastaveraged = pred_all_total$combined, forecastweightned = pred_all_total$combinedweightned)
-  final_all <- dplyr::union_all(as.data.frame(all), combined)
+  
+  ### Riprendo i dati actual e aggiungo la colonna "type = actual"
+  all <- mutate(all, type = "actual")
+  
+  
+  ### Combino i dataset e creo DB finale
+  final_all <- dplyr::union(all, pred_all_total_long)
   
   
   ### Creo l'oggetto da plottare e lo eseguo
-  q <- ggplot(final_all, aes(x=data, y=sessioni)) + geom_point() + geom_line() + theme_bw() + ggtitle("Forecast Overall")
+  q <- ggplot(final_all, aes(x = data, y = sessioni, col = type)) + geom_point() + geom_line() + theme_bw() + ggtitle(paste("Forecast di traffico OS per ",store))
   qq <- ggplotly(q)
   print(qq)
-  
 
+  
   ### Scrivo il forecast in output
-  write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)
+  write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)    
   
   
   ### TODO
