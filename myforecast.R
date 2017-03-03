@@ -28,7 +28,7 @@ mychannel$referral <- c("referral")
 
 
 ### Inizializzo la mia funzione
-myforecast <- function(store, file) {
+myforecast <- function(store, file, periods) {
   
   
   ### Installo i pacchetti minimi
@@ -136,7 +136,7 @@ myforecast <- function(store, file) {
   
   
   ### Creo dataframe finale con le singole previsioni
-  pred_all_total <- data.frame(data = seq(max(csv$Mese.dell.anno), by = "month", length.out = 25))
+  pred_all_total <- data.frame(data = seq(max(csv$Mese.dell.anno), by = "month", length.out = periods+1))
   
   
   ### Creo modello dati per fare storage accuracy dei 3 modelli
@@ -150,7 +150,7 @@ myforecast <- function(store, file) {
   ### Se non genero errore nella creazione del modello,
   ### Faccio la previsione e salvo su oggetto "_all"
   if(exists("ets_all")) {
-    pred_all_ets <- forecast(ets_all)
+    pred_all_ets <- forecast(ets_all, h = periods)
     pred_all_total$ets <- c(1,as.vector(pred_all_ets$mean))
     print(accuracy(ets_all))
     accuracy_all$ets <- accuracy(ets_all)[,2]
@@ -164,7 +164,7 @@ myforecast <- function(store, file) {
   ### Se non genero errore nella creazione del modello,
   ### Faccio la previsione e salvo su oggetto "_all"
   if(exists("arima_all")) {
-    pred_all_arima <- forecast(arima_all)
+    pred_all_arima <- forecast(arima_all, h = periods)
     pred_all_total$arima <- c(1,as.vector(pred_all_arima$mean))
     print(accuracy(arima_all))
     accuracy_all$arima <- accuracy(arima_all)[,2]
@@ -178,7 +178,7 @@ myforecast <- function(store, file) {
   ### Se non genero errore nella creazione del modello,
   ### Faccio la previsione e salvo su oggetto "_all"
   if(exists("tbats_all")) {
-    pred_all_tbats <- forecast(tbats_all)
+    pred_all_tbats <- forecast(tbats_all, h = periods)
     pred_all_total$tbats <- c(1,as.vector(pred_all_tbats$mean))
     print(accuracy(tbats_all))
     accuracy_all$tbats <- accuracy(tbats_all)[,2]
@@ -229,7 +229,7 @@ myforecast <- function(store, file) {
   
   
   ### Creo l'oggetto da plottare e lo eseguo
-  q <- ggplot(final_all, aes(x = data, y = sessioni, col = type)) + geom_point() + geom_line() + theme_bw() + ggtitle(paste("Forecast di traffico OS per ",store))
+  q <- ggplot(final_all, aes(x = data, y = sessioni, col = type)) + geom_point() + geom_line() + theme_bw() + ggtitle(paste("Forecast di traffico OS per",store))
   qq <- ggplotly(q)
   print(qq)
 
