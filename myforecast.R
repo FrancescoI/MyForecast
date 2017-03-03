@@ -379,4 +379,20 @@ myforecast <- function(store, file, periods) {
       i <- i+1
     }
   }
+  
+  
+  ### Trasformo il file originale affinché sia joinabile con DB forecast
+  final_all <- select(csv, Mese.dell.anno, Sessioni, medium, region)
+  final_all <- rename(final_all, data = Mese.dell.anno, sessioni = Sessioni)
+  final_all <- mutate(final_all, type = "actual")
+  
+  
+  ### Appendo iterativamente il file originale alle previsioni puntuali
+  for(i in 1:length(my_forecasts)){
+    tmp <- gather(my_forecasts[[i]], type, sessioni, -data) %>% mutate(region = strsplit(names(my_forecasts[i]), "_")[[1]][1], medium = strsplit(names(my_forecasts[i]), "_")[[1]][2])
+    final_all <- dplyr::union(final_all, tmp)
+  }
+  
+  
+  
 }
