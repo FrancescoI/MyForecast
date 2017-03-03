@@ -245,13 +245,29 @@ myforecast <- function(store, file, periods) {
                              , sep = ""),"_forecast_all.csv", sep=""), row.names = FALSE)    
   
   
-  ### TODO
-  ### 1. Importare dati con min. 24 mesi e applicare forecast (done!)
-  ### 1.1 Salvare output su file ad hoc (done!)
-  ### 2. Segmentare dati su base region
-  ### 2.1 Per ogni region, segmentare su base channel
-  ### 2.2 Forecastare ogni "item"
-  ### 2.3 Salvare ogni forecast in formato |Mese|Region|Channel|Sessioni
+
+  ##########################################
+  ### Inizio Forecast di dati mensili,   ###
+  ### segmentati per region e canale.    ###
+  ##########################################    
   
-  ### write.csv(csv, paste("FORECAST/",store,"/output.csv", sep=""), row.names = FALSE)
+  
+  ### Pulisco l'ambiente da variabili temporanee di prima
+  rm(list = c("all"
+              , "all_ts"
+              , "pred_all_total"
+              , "accuracy_all"
+              , "ets_all"
+              , "pred_all_ets"
+              , "arima_all"
+              , "pred_all_arima"
+              , "tbats_all"
+              , "pred_all_tbats"
+              , "a"
+              , "b"
+              , "pred_all_total_long"))
+  
+  
+  ### Creo funzione che fa forecast per canale
+  
 }
