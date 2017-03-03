@@ -152,6 +152,7 @@ myforecast <- function(store, file, periods) {
   if(exists("ets_all")) {
     pred_all_ets <- forecast(ets_all, h = periods)
     pred_all_total$ets <- c(1,as.vector(pred_all_ets$mean))
+    print(ets_all)
     print(accuracy(ets_all))
     accuracy_all$ets <- accuracy(ets_all)[,2]
   }  
@@ -166,13 +167,14 @@ myforecast <- function(store, file, periods) {
   if(exists("arima_all")) {
     pred_all_arima <- forecast(arima_all, h = periods)
     pred_all_total$arima <- c(1,as.vector(pred_all_arima$mean))
+    print(arima_all)
     print(accuracy(arima_all))
     accuracy_all$arima <- accuracy(arima_all)[,2]
   }  
   
   
   ### Creo il modello TBATS
-  tbats_all <- tbats(all_ts, use.box.cox = TRUE, use.damped.trend = TRUE)
+  tbats_all <- tbats(all_ts, use.box.cox = TRUE)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -180,6 +182,7 @@ myforecast <- function(store, file, periods) {
   if(exists("tbats_all")) {
     pred_all_tbats <- forecast(tbats_all, h = periods)
     pred_all_total$tbats <- c(1,as.vector(pred_all_tbats$mean))
+    print(tbats_all)
     print(accuracy(tbats_all))
     accuracy_all$tbats <- accuracy(tbats_all)[,2]
   }  
