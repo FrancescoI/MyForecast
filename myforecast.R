@@ -139,6 +139,10 @@ myforecast <- function(store, file) {
   pred_all_total <- data.frame(data = seq(max(csv$Mese.dell.anno), by = "month", length.out = 25))
   
   
+  ### Creo modello dati per fare storage accuracy dei 3 modelli
+  accuracy_all <- list()
+  
+  
   ### Creo il modello ETS
   ets_all <- ets(all_ts)
   
@@ -148,6 +152,8 @@ myforecast <- function(store, file) {
   if(exists("ets_all")) {
     pred_all_ets <- forecast(ets_all)
     pred_all_total$ets <- c(1,as.vector(pred_all_ets$mean))
+    print(accuracy(ets_all))
+    accuracy_all$ets <- accuracy(ets_all)[,2]
   }  
   
   
@@ -160,6 +166,8 @@ myforecast <- function(store, file) {
   if(exists("arima_all")) {
     pred_all_arima <- forecast(arima_all)
     pred_all_total$arima <- c(1,as.vector(pred_all_arima$mean))
+    print(accuracy(arima_all))
+    accuracy_all$arima <- accuracy(arima_all)[,2]
   }  
   
   
@@ -172,6 +180,8 @@ myforecast <- function(store, file) {
   if(exists("tbats_all")) {
     pred_all_tbats <- forecast(tbats_all)
     pred_all_total$tbats <- c(1,as.vector(pred_all_tbats$mean))
+    print(accuracy(tbats_all))
+    accuracy_all$tbats <- accuracy(tbats_all)[,2]
   }  
   
   
@@ -181,6 +191,16 @@ myforecast <- function(store, file) {
   
   ### Creo media aritmetica dei 3 modelli
   pred_all_total$combined <- rowMeans(pred_all_total[,-1])
+  
+  
+  ### Creo i pesi dei 3 modelli sulla base dell'RMSE in-sample
+  w_all <- lapply(accuracy_all, function(x){
+    (1/x)/sum(1/(unlist(accuracy_all)))
+  })
+  
+  
+  ### Creo media ponderata su errore in-sample
+  ### pred_all_total$combinedweightned <- 
   
   
   ### Faccio l'append della serie storica predetta con quella di partenza
@@ -194,7 +214,6 @@ myforecast <- function(store, file) {
   print(qq)
   
 
-  
   ### Scrivo il forecast in output
   write.csv(final_all, paste("FORECAST/",store,"/all.csv", sep=""), row.names = FALSE)
   
