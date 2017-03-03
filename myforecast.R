@@ -275,8 +275,7 @@ myforecast <- function(store, file, periods) {
     ### Start date uguale alla minima data disponibile per la serie storica
     data.ts <- ts(data$sessioni, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
     
-    
-    ################################################ FIXARE ###################################################
+
     ### Creo dataframe finale con le singole previsioni
     pred_segment_total <- data.frame(data = seq(max(data$Mese.dell.anno), by = "month", length.out = periods+1))
     
@@ -306,7 +305,7 @@ myforecast <- function(store, file, periods) {
     ### Faccio la previsione e salvo su oggetto "_segment"
     if(exists("arima_segment")) {
       pred_segment_arima <- forecast(arima_segment, h = periods)
-      pred_segment_total$arima <- c(1,as.vector(pred_segment_arima$mean))pred_segment_total
+      pred_segment_total$arima <- c(1,as.vector(pred_segment_arima$mean))
       accuracy_segment$arima <- accuracy(arima_segment)[,2]
     }  
     
@@ -355,7 +354,6 @@ myforecast <- function(store, file, periods) {
     pred_segment_total[,-1] <- apply(pred_segment_total[,-1], 2, function(x){round(x,0)})
     pred_segment_total <<- pred_segment_total
     
-    ########################################### FIXARE ####################################################
   }
   
   
@@ -393,6 +391,10 @@ myforecast <- function(store, file, periods) {
     final_all <- dplyr::union(final_all, tmp)
   }
   
-  
+  write.csv(final_all, paste("FORECAST/"
+                              ,store
+                              ,"/"
+                              ,paste(year(Sys.Date()),month(Sys.Date())
+                                     , sep = ""),"_forecast_segmented.csv", sep=""), row.names = FALSE)
   
 }
