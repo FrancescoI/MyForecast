@@ -273,93 +273,88 @@ myforecast <- function(store, file, periods) {
     
     ### Converto il dataframe in formato TS con f=12 e
     ### Start date uguale alla minima data disponibile per la serie storica
-    data.ts <- ts(data, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
+    data.ts <- ts(data$sessioni, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
     
     
     ################################################ FIXARE ###################################################
     ### Creo dataframe finale con le singole previsioni
-    pred_all_total <- data.frame(data = seq(max(csv$Mese.dell.anno), by = "month", length.out = periods+1))
+    pred_segment_total <- data.frame(data = seq(max(data$Mese.dell.anno), by = "month", length.out = periods+1))
     
     
     ### Creo modello dati per fare storage accuracy dei 3 modelli
-    accuracy_all <- list()
+    accuracy_segment <- list()
     
     
     ### Creo il modello ETS
-    ets_all <- ets(all_ts)
+    ets_segment <- ets(data.ts)
     
     
     ### Se non genero errore nella creazione del modello,
     ### Faccio la previsione e salvo su oggetto "_all"
-    if(exists("ets_all")) {
-      pred_all_ets <- forecast(ets_all, h = periods)
-      pred_all_total$ets <- c(1,as.vector(pred_all_ets$mean))
-      print(ets_all)
-      print(accuracy(ets_all))
-      accuracy_all$ets <- accuracy(ets_all)[,2]
+    if(exists("ets_segment")) {
+      pred_segment_ets <- forecast(ets_segment, h = periods)
+      pred_segment_total$ets <- c(1,as.vector(pred_segment_ets$mean))
+      accuracy_segment$ets <- accuracy(ets_segment)[,2]
     }  
     
     
     ### Creo il modello ARIMA
-    arima_all <- auto.arima(all_ts)
+    arima_segment <- auto.arima(data.ts)
     
     
     ### Se non genero errore nella creazione del modello,
-    ### Faccio la previsione e salvo su oggetto "_all"
-    if(exists("arima_all")) {
-      pred_all_arima <- forecast(arima_all, h = periods)
-      pred_all_total$arima <- c(1,as.vector(pred_all_arima$mean))
-      print(arima_all)
-      print(accuracy(arima_all))
-      accuracy_all$arima <- accuracy(arima_all)[,2]
+    ### Faccio la previsione e salvo su oggetto "_segment"
+    if(exists("arima_segment")) {
+      pred_segment_arima <- forecast(arima_segment, h = periods)
+      pred_segment_total$arima <- c(1,as.vector(pred_segment_arima$mean))pred_segment_total
+      accuracy_segment$arima <- accuracy(arima_segment)[,2]
     }  
     
     
     ### Creo il modello TBATS
-    tbats_all <- tbats(all_ts, use.box.cox = TRUE)
+    tbats_segment <- tbats(data.ts, use.box.cox = TRUE)
     
     
     ### Se non genero errore nella creazione del modello,
-    ### Faccio la previsione e salvo su oggetto "_all"
-    if(exists("tbats_all")) {
-      pred_all_tbats <- forecast(tbats_all, h = periods)
-      pred_all_total$tbats <- c(1,as.vector(pred_all_tbats$mean))
-      print(tbats_all)
-      print(accuracy(tbats_all))
-      accuracy_all$tbats <- accuracy(tbats_all)[,2]
+    ### Faccio la previsione e salvo su oggetto "_segment"
+    if(exists("tbats_segment")) {
+      pred_segment_tbats <- forecast(tbats_segment, h = periods)
+      pred_segment_total$tbats <- c(1,as.vector(pred_segment_tbats$mean))
+      accuracy_segment$tbats <- accuracy(tbats_segment)[,2]
     }  
     
     
     ### Elimino prima riga
-    pred_all_total <- pred_all_total[-1,]
+    pred_segment_total <- pred_segment_total[-1,]
     
     
     ### Creo media aritmetica dei 3 modelli
-    pred_all_total$combined <- rowMeans(pred_all_total[,-1])
+    pred_segment_total$combined <- rowMeans(pred_segment_total[,-1])
     
     
     ### Creo i pesi dei 3 modelli sulla base dell'RMSE in-sample
-    w_all <- lapply(accuracy_all, function(x){
-      (1/x)/sum(1/(unlist(accuracy_all)))
+    w_segment <- lapply(accuracy_segment, function(x){
+      (1/x)/sum(1/(unlist(accuracy_segment)))
     })
     
     
     ### Creo media ponderata su errore in-sample
-    a <- data.frame(temp = rep(0, ncol(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')])))
-    b <- data.frame(temp = rep(0, nrow(pred_all_total)))
-    for(i in 1:length(pred_all_total$data)){
-      for(j in 1:ncol(pred_all_total[,!names(pred_all_total) %in% c('data', 'combined')])){
-        a[j,] <- (sum(w_all[[j]] * pred_all_total[i,!names(pred_all_total) %in% c('data', 'combined')][j]))
+    a <- data.frame(temp = rep(0, ncol(pred_segment_total[,!names(pred_segment_total) %in% c('data', 'combined')])))
+    b <- data.frame(temp = rep(0, nrow(pred_segment_total)))
+    for(i in 1:length(pred_segment_total$data)){
+      for(j in 1:ncol(pred_segment_total[,!names(pred_segment_total) %in% c('data', 'combined')])){
+        a[j,] <- (sum(w_segment[[j]] * pred_segment_total[i,!names(pred_segment_total) %in% c('data', 'combined')][j]))
       }
       b[i,] <- colSums(a)
     }
-    pred_all_total$combinedweightned <- b$temp
-    names(pred_all_total$combinedweightned) <- 'combinedweightned'
+    pred_segment_total$combinedweightned <- b$temp
+    names(pred_segment_total$combinedweightned) <- 'combinedweightned'
     
     
     ### Approssimo all'unità
-    pred_all_total[,-1] <- apply(pred_all_total[,-1], 2, function(x){round(x,0)})
-  
+    pred_segment_total[,-1] <- apply(pred_segment_total[,-1], 2, function(x){round(x,0)})
+    pred_segment_total <<- pred_segment_total
+    
     ########################################### FIXARE ####################################################
   }
   
@@ -368,12 +363,19 @@ myforecast <- function(store, file, periods) {
   my_series <- vector("list", length(unique(region)) * length(unique(medium)))
   
   
-  ### Creo loop per estrarre dati mensili per ogni coppia region-medium
+  ### Creo lista di previsioni in uscita
+  my_forecasts <- vector("list", length(unique(region)) * length(unique(medium)))
+  
+  
+  ### Creo loop per estrarre forecast mensili per ogni coppia region-medium
   i <- 1
   for(regions in unique(region)){
     for(mediums in unique(medium)) {
       my_series[[i]] <- select(csv, Mese.dell.anno, medium, region, Sessioni) %>% group_by(Mese.dell.anno, medium, region) %>% filter(region == regions, medium == mediums) %>% summarise(sessioni = sum(Sessioni))
       names(my_series)[i] <- paste(regions, "_", mediums, sep="") 
+      x(my_series[[i]])
+      my_forecasts[[i]] <- pred_segment_total
+      names(my_forecasts)[i] <- paste(regions, "_", mediums, sep="")
       i <- i+1
     }
   }
