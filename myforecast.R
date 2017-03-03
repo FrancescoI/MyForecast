@@ -216,6 +216,8 @@ myforecast <- function(store, file) {
   pred_all_total[,-1] <- apply(pred_all_total[,-1], 2, function(x){round(x,0)})
   
   
+  ################ LAVORARE DA QUI IN POI ###############
+  
   ### Faccio l'append della serie storica predetta con quella di partenza
   combined <- data.frame(data =  pred_all_total$data, forecastaveraged = pred_all_total$combined, forecastweightned = pred_all_total$combinedweightned)
   final_all <- dplyr::union_all(as.data.frame(all), combined)
