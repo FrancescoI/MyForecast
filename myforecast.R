@@ -144,7 +144,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello ETS
-  ets_all <- ets(all_ts, lambda = 0, damped = TRUE)
+  ets_all <- ets(all_ts, lambda = 0)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -232,7 +232,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo l'oggetto da plottare e lo eseguo
-  q <- ggplot(final_all, aes(x = data, y = sessioni, col = type)) + geom_point() + geom_line() + theme_bw() + ggtitle(paste("Forecast di traffico OS per",store))
+  q <- ggplot(final_all, aes(x = data, y = sessioni, col = type)) + geom_point() + geom_line() + theme_bw() + ggtitle(paste("Forecast di traffico per",store))
   qq <- ggplotly(q)
   print(qq)
 
