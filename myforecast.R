@@ -144,7 +144,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello ETS
-  ets_all <- ets(all_ts)
+  ets_all <- ets(all_ts, lambda = 0, damped = TRUE)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -159,7 +159,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello ARIMA
-  arima_all <- auto.arima(all_ts)
+  arima_all <- auto.arima(all_ts, lambda = 0.5)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -285,7 +285,7 @@ myforecast <- function(store, file, periods) {
     
     
     ### Creo il modello ETS
-    ets_segment <- ets(data.ts)
+    ets_segment <- ets(data.ts, lambda = 0)
     
     
     ### Se non genero errore nella creazione del modello,
@@ -298,7 +298,7 @@ myforecast <- function(store, file, periods) {
     
     
     ### Creo il modello ARIMA
-    arima_segment <- auto.arima(data.ts)
+    arima_segment <- auto.arima(data.ts, lambda = 0.5)
     
     
     ### Se non genero errore nella creazione del modello,
