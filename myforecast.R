@@ -28,7 +28,7 @@ mychannel$referral <- c("referral")
 
 
 ### Inizializzo la mia funzione
-myforecast <- function(store, file, periods) {
+myforecast <- function(store, file, periods, cleaning.outlier = FALSE) {
   
   
   ### Installo i pacchetti minimi
@@ -126,6 +126,12 @@ myforecast <- function(store, file, periods) {
   all_ts <- ts(all$sessioni, start = c(min_year, min_month), frequency = 12)
   
   
+  ### Pulisco gli outlier sulla base dell'argomento della funzione
+  if(cleaning.outlier == TRUE) {
+    all_ts <- tsclean(all_ts)
+    print('Aggregated traffico: trying to clean outliers before modelling')
+  }
+  
   
   
   ###################################################################
@@ -144,7 +150,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello ETS
-  ets_all <- ets(all_ts, lambda = 0)
+  ets_all <- ets(all_ts)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -159,7 +165,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello ARIMA
-  arima_all <- auto.arima(all_ts, lambda = 0.5)
+  arima_all <- auto.arima(all_ts, lambda = 0.99)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -174,7 +180,7 @@ myforecast <- function(store, file, periods) {
   
   
   ### Creo il modello TBATS
-  tbats_all <- tbats(all_ts, use.box.cox = TRUE)
+  tbats_all <- tbats(all_ts, use.box.cox = FALSE)
   
   
   ### Se non genero errore nella creazione del modello,
@@ -275,7 +281,14 @@ myforecast <- function(store, file, periods) {
     ### Start date uguale alla minima data disponibile per la serie storica
     data.ts <- ts(data$sessioni, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
     
+    
+    ### Pulisco gli outlier sulla base dell'argomento della funzione
+    if(cleaning.outlier == TRUE) {
+      data.ts <- tsclean(data.ts)
+      print('Segmented traffico: trying to clean outliers before modelling')
+    }
 
+    
     ### Creo dataframe finale con le singole previsioni
     pred_segment_total <- data.frame(data = seq(max(data$Mese.dell.anno), by = "month", length.out = periods+1))
     
@@ -285,7 +298,7 @@ myforecast <- function(store, file, periods) {
     
     
     ### Creo il modello ETS
-    ets_segment <- ets(data.ts, lambda = 0)
+    ets_segment <- ets(data.ts)
     
     
     ### Se non genero errore nella creazione del modello,
@@ -298,7 +311,7 @@ myforecast <- function(store, file, periods) {
     
     
     ### Creo il modello ARIMA
-    arima_segment <- auto.arima(data.ts, lambda = 0.5)
+    arima_segment <- auto.arima(data.ts, lambda = 0.99)
     
     
     ### Se non genero errore nella creazione del modello,
@@ -311,7 +324,7 @@ myforecast <- function(store, file, periods) {
     
     
     ### Creo il modello TBATS
-    tbats_segment <- tbats(data.ts, use.box.cox = TRUE)
+    tbats_segment <- tbats(data.ts, use.box.cox = FALSE)
     
     
     ### Se non genero errore nella creazione del modello,
