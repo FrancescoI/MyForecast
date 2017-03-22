@@ -38,6 +38,7 @@ myforecast <- function(store, file, periods, cleaning.outlier = FALSE) {
   library(lubridate)
   library(ggplot2)
   library(plotly)
+  library(forecastxgb)
   
   
   ### Setto l'ambiente di lavoro
@@ -301,8 +302,11 @@ myforecast <- function(store, file, periods, cleaning.outlier = FALSE) {
     
     ### Converto il dataframe in formato TS con f=12 e
     ### Start date uguale alla minima data disponibile per la serie storica
-    data.ts <- ts(data$sessioni, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
-    
+    if(length(data$sessioni) > 17) {
+      data.ts <- ts(data$sessioni, frequency = 12, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
+    } else {
+      data.ts <- ts(data$sessioni, frequency = 1, start = c(year(min(data$Mese.dell.anno)), month(min(data$Mese.dell.anno))))
+    }
     
     ### Pulisco gli outlier sulla base dell'argomento della funzione
     if(cleaning.outlier == TRUE) {
